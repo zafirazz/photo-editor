@@ -1,0 +1,1 @@
+FONT = ("Verdana", 35)
