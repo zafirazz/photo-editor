@@ -2,7 +2,7 @@ from tkinter import *
 import visual as v
 from PIL import Image, ImageTk
 from tkinter import filedialog
-import cv2
+import os
 
 class Canva:
     def __init__(self, master):
@@ -15,14 +15,15 @@ class Canva:
         self.frame2.config(relief=RIDGE)
         self.frame_cancel = Frame(self.master)
         self.frame_cancel.pack()
+        self.side_frame = Frame(self.frame2)
+        self.side_frame.pack()
+        self.side_frame.config(relief=GROOVE)
 
-        self.c = Canvas(self.frame2, bg="violet")
-        self.c.pack()
+        self.c = Canvas(self.frame2, bg="violet", width=900, height=900)
+        self.c.pack(side="right")
 
         self.main_lbl = Label(self.frame, text="Welcome to the Retrica!", font=v.FONT)
         self.main_lbl.grid(row=0, column=1, columnspan=1)
-        # self.alatoo_logo = ImageTk.PhotoImage(file="logo.ico").subsample(2, 2)
-        # self.logo= Label(self.frame2, image=self.alatoo_logo).grid(row=0, column=0, rowspan=1)
 
         self.btn1 = Button(self.frame2, text="Open file(only jpg, jpeg or png)", font=v.FONT2, bg=v.bg_1, command=self.upload)
         self.btn1.pack(side="top")
@@ -38,25 +39,13 @@ class Canva:
         self.btn_cancel.pack(side="bottom")
 
     def upload(self):
-        self.filename = filedialog.askopenfilename()
-        self.img = cv2.imread(self.filename)
-        self.edited_image = cv2.imread(self.filename)
-        self.filtered = cv2.imread(self.filename)
-        self.display(self.edited_image)
-
-    def refresh_frame(self):
-        try:
-            self.side_frame.grid_forget()
-        except:
-            pass
-
-        self.c.unbind("<ButtonPress>")
-        self.c.unbind("<B1-Motion>")
-        self.c.unbind("<ButtonRelease>")
-        self.display_image(self.edited_image)
-        self.side_frame = Frame(self.frame_menu)
-        self.side_frame.grid(row=0, column=2, rowspan=10)
-        self.side_frame.config(relief=GROOVE, padding=(50, 15))
+        global path, img
+        path = filedialog.askopenfilename(initialdir=os.getcwd())
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img1 = ImageTk.PhotoImage(img)
+        self.c.create_image(500, 500, image=img1)
+        self.c.image=img1
 
     def size(self):
         pass
@@ -77,7 +66,13 @@ class Canva:
         pass
 
     def rotate(self):
-        pass
+        global path, img_rotated, img_rotated1
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img_rotated = img.transpose(Image.ROTATE_90)
+        img_rotated1 = ImageTk.PhotoImage(img_rotated)
+        self.c.create_image(500, 500, image=img_rotated1)
+        self.c.image=img_rotated1
 
     def save(self):
         pass
@@ -85,24 +80,6 @@ class Canva:
     def cancel(self):
         pass
 
-
-    def display(self, image=None):
-        if image is None:
-            self.image = self.edited_image.copy()
-        else:
-            self.image=image
-
-        self.image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        self.height, self.width, self.ch = self.image.shape()
-        self.r = self.height/self.width
-
-        self.new_w = self.width
-        self.new_h = self.height
-
-        self.new_img = ImageTk.PhotoImage(Image.fromarray(self.new_img))
-
-        self.c.config(width=self.new_w, height=self.new_h)
-        self.c.create_image(self.new_w/2, self.new_h/2, image=self.new_img)
 
 
 root = Tk()
