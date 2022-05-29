@@ -22,6 +22,9 @@ class Canva:
 
         self.main_lbl = Label(self.frame, text="Welcome to the Retrica!", font=v.FONT)
         self.main_lbl.grid(row=0, column=1, columnspan=1)
+        self.logo = ImageTk.PhotoImage(file='alatoologo.jpeg')
+        self.logo_lbl = Label(self.frame, image=self.logo)
+        self.logo_lbl.grid(row=0, column=0, rowspan=5)
 
         self.btn1 = Button(self.frame2, text="Open file(only jpg, jpeg or png)", font=v.FONT2, bg=v.bg_1, command=self.upload)
         self.btn1.pack(side="top")
@@ -94,7 +97,8 @@ class Canva:
         self.c.create_image(500, 500, image=img_rotated1)
         self.c.image=img_rotated1
 
-    # def save(self):
+    def save(self):
+        pass
     #     saveas = self.filename.split(".")[-1]
     #     filename =filedialog.askopenfilename()
     #     filename = filename + "." + saveas
@@ -108,6 +112,5 @@ class Canva:
 
 root = Tk()
 root.title("Retrica de")
-root.resizable(False, False)
 Canva(root)
 root.mainloop()
