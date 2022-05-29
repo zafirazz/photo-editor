@@ -1,6 +1,7 @@
 from tkinter import *
 import visual as v
 from PIL import Image, ImageTk
+from PIL.ImageFilter import CONTOUR, SMOOTH, BLUR
 from tkinter import filedialog
 import os
 
@@ -15,9 +16,6 @@ class Canva:
         self.frame2.config(relief=RIDGE)
         self.frame_cancel = Frame(self.master)
         self.frame_cancel.pack()
-        self.side_frame = Frame(self.frame2)
-        self.side_frame.pack()
-        self.side_frame.config(relief=GROOVE)
 
         self.c = Canvas(self.frame2, bg="violet", width=900, height=900)
         self.c.pack(side="right")
@@ -27,8 +25,6 @@ class Canva:
 
         self.btn1 = Button(self.frame2, text="Open file(only jpg, jpeg or png)", font=v.FONT2, bg=v.bg_1, command=self.upload)
         self.btn1.pack(side="top")
-        self.btn_size = Button(self.frame2, text="Resize image to InstaSize", font=v.FONT2, bg=v.bg_1, command=self.size)
-        self.btn_size.pack(side="bottom")
         self.btn_filter = Button(self.frame2, text="Apply fancy filter", font=v.FONT2, bg=v.bg_1, command=self.filter)
         self.btn_filter.pack(side="bottom")
         self.btn_rotate = Button(self.frame2, text="Rotate image", font=v.FONT2, bg=v.bg_1, command=self.rotate)
@@ -47,23 +43,47 @@ class Canva:
         self.c.create_image(500, 500, image=img1)
         self.c.image=img1
 
-    def size(self):
-        pass
-
     def filter(self):
-        self.refresh_frame()
-        self.btn_bw = Button(self.side_frame, text="Black and White", command=self.bw).pack(side="right")
-        self.btn_sketch = Button(self.side_frame, text="Sketch", command=self.sketch).pack(side="right")
-        self.btn_effect = Button(self.side_frame, text="Another filter", command=self.filter1).pack(side="right")
+        self.btn_bw = Button(self.frame2, text="Black and White", command=self.bw).pack(side="right")
+        self.btn_sketch = Button(self.frame2, text="Sketch", command=self.sketch).pack(side="right")
+        self.btn_effect = Button(self.frame2, text="Smooth", command=self.filter1).pack(side="right")
+        self.btn_blur = Button(self.frame2, text="Blur", command=self.filter2).pack(side="right")
 
     def bw(self):
-        pass
+        global path, img_ed, img_ed1
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img_ed = img.convert("L")
+        img_ed1 = ImageTk.PhotoImage(img_ed)
+        self.c.create_image(500, 500, image=img_ed1)
+        self.c.image = img_ed1
 
     def sketch(self):
-        pass
+        global path, img_sketch, img_sketch1
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img_sketch = img.filter(CONTOUR)
+        img_sketch1 = ImageTk.PhotoImage(img_sketch)
+        self.c.create_image(500, 500, image=img_sketch1)
+        self.c.image = img_sketch1
 
     def filter1(self):
-        pass
+        global path, img_sm, img_sm1
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img_sm = img.filter(SMOOTH)
+        img_sm1 = ImageTk.PhotoImage(img_sm)
+        self.c.create_image(500, 500, image=img_sm1)
+        self.c.image=img_sm1
+
+    def filter2(self):
+        global path, img_bl, img_bl1
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img_bl = img.filter(BLUR)
+        img_bl1 = ImageTk.PhotoImage(img_bl)
+        self.c.create_image(500, 500, image=img_bl1)
+        self.c.image = img_bl1
 
     def rotate(self):
         global path, img_rotated, img_rotated1
@@ -74,8 +94,12 @@ class Canva:
         self.c.create_image(500, 500, image=img_rotated1)
         self.c.image=img_rotated1
 
-    def save(self):
-        pass
+    # def save(self):
+    #     saveas = self.filename.split(".")[-1]
+    #     filename =filedialog.askopenfilename()
+    #     filename = filename + "." + saveas
+    #
+    #
 
     def cancel(self):
         pass
@@ -83,5 +107,7 @@ class Canva:
 
 
 root = Tk()
+root.title("Retrica de")
+root.resizable(False, False)
 Canva(root)
 root.mainloop()
