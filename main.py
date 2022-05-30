@@ -1,6 +1,6 @@
 from tkinter import *
 import visual as v
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageEnhance
 from PIL.ImageFilter import CONTOUR, SMOOTH, BLUR
 from tkinter import filedialog
 import os
@@ -22,7 +22,7 @@ class Canva:
 
         self.main_lbl = Label(self.frame, text="Welcome to the Retrica!", font=v.FONT)
         self.main_lbl.grid(row=0, column=1, columnspan=1)
-        self.logo = ImageTk.PhotoImage(file='alatoologo.jpeg')
+        self.logo = ImageTk.PhotoImage(file='logo.png')
         self.logo_lbl = Label(self.frame, image=self.logo)
         self.logo_lbl.grid(row=0, column=0, rowspan=5)
 
@@ -33,9 +33,13 @@ class Canva:
         self.btn_rotate = Button(self.frame2, text="Rotate image", font=v.FONT2, bg=v.bg_1, command=self.rotate)
         self.btn_rotate.pack(side="bottom")
         self.btn_save = Button(self.frame2, text="Save image as", font=v.FONT2, bg=v.bg_1, command=self.save)
-        self.btn_save.pack(side="bottom")
+        self.btn_save.pack(side="top")
         self.btn_cancel = Button(self.frame_cancel, text="Cancel changes", font=v.FONT2, bg=v.bg_1, command=self.cancel)
-        self.btn_cancel.pack(side="bottom")
+        self.btn_cancel.pack(side="top")
+        self.btn_brightness = Button(self.frame2, text="Brightness", font=v.FONT2, bg=v.bg_1, command=self.bright)
+        self.btn_brightness.pack(side="bottom")
+        self.btn_contrast = Button(self.frame2, text="Contrast", font=v.FONT2, bg=v.bg_1, command=self.contrast)
+        self.btn_contrast.pack(side="bottom")
 
     def upload(self):
         global path, img
@@ -85,6 +89,7 @@ class Canva:
         img.thumbnail((1080, 1080))
         img_bl = img.filter(BLUR)
         img_bl1 = ImageTk.PhotoImage(img_bl)
+        img_bl1.save()
         self.c.create_image(500, 500, image=img_bl1)
         self.c.image = img_bl1
 
@@ -97,6 +102,72 @@ class Canva:
         self.c.create_image(500, 500, image=img_rotated1)
         self.c.image=img_rotated1
 
+    def bright(self):
+        self.btn_br = Button(self.frame2, text="Brighten up", command=self.bright_plus).pack(side="right")
+        self.btn_br2 = Button(self.frame2, text="Brighten down", command=self.bright_minus).pack(side="right")
+
+    def bright_plus(self):
+        global path, enhancer, enhanced_im
+
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        enhancer = ImageEnhance.Brightness(img)
+        enhanced_im = enhancer.enhance(1.8)
+        enhanced_im = ImageTk.PhotoImage(enhanced_im)
+        self.c.create_image(500, 500, image=enhanced_im)
+        self.c.image=enhanced_im
+
+    def bright_minus(self):
+        global path, enhancer, enhanced_im
+
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        enhancer = ImageEnhance.Brightness(img)
+        enhanced_im = enhancer.enhance(0.5)
+        enhanced_im = ImageTk.PhotoImage(enhanced_im)
+        self.c.create_image(500, 500, image=enhanced_im)
+        self.c.image=enhanced_im
+
+    def contrast(self):
+        self.btn_c = Button(self.frame2, text="Contrast up", command=self.contrast_plus).pack(side="right")
+        self.btn_c2 = Button(self.frame2, text="Contrast down", command=self.contrast_minus).pack(side="right")
+
+    def contrast_plus(self):
+        global path, img_c, img_c1
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img_c = ImageEnhance.Contrast(img)
+        img_c1 = img_c.enhance(1.5)
+        img_c1 = ImageTk.PhotoImage(img_c1)
+        self.c.create_image(500, 500, image=img_c1)
+        self.c.image=img_c1
+
+    def contrast_minus(self):
+        global path, img_c, img_c1
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img_c = ImageEnhance.Contrast(img)
+        img_c1 = img_c.enhance(0.5)
+        img_c1 = ImageTk.PhotoImage(img_c1)
+        self.c.create_image(500, 500, image=img_c1)
+        self.c.image = img_c1
+
+
+    # img_ed = None
+    # img_ed1 = None
+    # img_skecth = None
+    # img_sketch1 = None
+    # img_bl = None
+    # img_bl1 = None
+    # img_rotated = None
+    # img_rotated1 = None
+    # enhancer = None
+    # enhanced_im = None
+    # img_c = None
+    # img_c1 = None
+
+
+
     def save(self):
         pass
     #     saveas = self.filename.split(".")[-1]
@@ -106,11 +177,18 @@ class Canva:
     #
 
     def cancel(self):
-        pass
+        global path, img
+        img = Image.open(path)
+        img.thumbnail((1080, 1080))
+        img1 = ImageTk.PhotoImage(img)
+        self.c.create_image(500, 500, image=img1)
+        self.c.image = img1
+        
 
 
 
 root = Tk()
 root.title("Retrica de")
+root.resizable(False, False)
 Canva(root)
 root.mainloop()
