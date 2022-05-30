@@ -1,6 +1,6 @@
 Retrica - a photo editing app that was created with Tkinter GUI and PIL library.
 
-With the help of this app, user can choose an image from folder and resize it to Instagram size, rotate it, apply some fancy filters and save it. 
+With the help of this app, user can choose an image from folder and rotate it, apply some fancy filters like black and white, skecth, blur, smooth etc., adjust a brightness and contrast of the chosen image. User can also cancel all the changes. Have fun editing pictures in your creative way!
 
 ![Screenshot from 2022-05-29 21-11-19](https://user-images.githubusercontent.com/66420708/170876700-90701cbf-f90f-4585-ba90-79ddc17a9076.png)
 
