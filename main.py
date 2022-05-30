@@ -41,14 +41,20 @@ class Canva:
         self.btn_contrast = Button(self.frame2, text="Contrast", font=v.FONT2, bg=v.bg_1, command=self.contrast)
         self.btn_contrast.pack(side="bottom")
 
+        # self.bind("<Button-1>", self.draw)
+        # self.bind("<B1-Motion>", self.draw2)
+
     def upload(self):
         global path, img
-        path = filedialog.askopenfilename(initialdir=os.getcwd())
-        img = Image.open(path)
-        img.thumbnail((1080, 1080))
-        img1 = ImageTk.PhotoImage(img)
-        self.c.create_image(500, 500, image=img1)
-        self.c.image=img1
+        try:
+            path = filedialog.askopenfilename(initialdir=os.getcwd())
+            img = Image.open(path)
+            img.thumbnail((1080, 1080))
+            img1 = ImageTk.PhotoImage(img)
+            self.c.create_image(500, 500, image=img1)
+            self.c.image=img1
+        except:
+            print("Cannot open this directory")
 
     def filter(self):
         self.btn_bw = Button(self.frame2, text="Black and White", command=self.bw).pack(side="right")
@@ -103,6 +109,10 @@ class Canva:
         self.c.image=img_rotated1
 
     def bright(self):
+        # self.btn_bw.destroy()
+        # self.btn_sketch.destroy()
+        # self.btn_effect.destroy()
+        # self.btn_blur.destroy()
         self.btn_br = Button(self.frame2, text="Brighten up", command=self.bright_plus).pack(side="right")
         self.btn_br2 = Button(self.frame2, text="Brighten down", command=self.bright_minus).pack(side="right")
 
@@ -152,6 +162,15 @@ class Canva:
         self.c.create_image(500, 500, image=img_c1)
         self.c.image = img_c1
 
+    # def draw(self):
+    #     global lastx, lasty
+    #     lastx, lasty = self.x, self.lasty
+    #
+    # def draw2(self):
+    #     global lastx, lasty
+    #     self.create_line((lastx, lasty, self.x, self.y), width=15, capstyle="round", fill="purple")
+    #     lastx, lasty = self.x, self.y
+
 
     # img_ed = None
     # img_ed1 = None
@@ -183,7 +202,7 @@ class Canva:
         img1 = ImageTk.PhotoImage(img)
         self.c.create_image(500, 500, image=img1)
         self.c.image = img1
-        
+
 
 
 
